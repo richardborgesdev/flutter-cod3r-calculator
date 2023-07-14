@@ -4,6 +4,7 @@ class Button extends StatelessWidget {
   final String text;
   final bool big;
   final Color color;
+  final void Function(String) callback;
   static const DARK = Color.fromRGBO(82, 82, 82, 1);
   static const DEFAULT = Color.fromRGBO(112, 112, 112, 1);
   static const OPERATION = Color.fromRGBO(250, 158, 13, 1);
@@ -12,18 +13,21 @@ class Button extends StatelessWidget {
     required this.text,
     this.big = false,
     this.color = DEFAULT,
+    required this.callback,
   });
 
   const Button.big({
     required this.text,
     this.big = true,
     this.color = DEFAULT,
+    required this.callback,
   });
 
   const Button.operation({
     required this.text,
     this.big = false,
     this.color = OPERATION,
+    required this.callback,
   });
 
   @override
@@ -34,7 +38,7 @@ class Button extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(this.color),
         ),
-        onPressed: () {},
+        onPressed: () => callback,
         child: Text(
           text,
           style: TextStyle(

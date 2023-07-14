@@ -5,13 +5,15 @@ import '../components/keyboard.dart';
 class Calculator extends StatelessWidget {
   const Calculator({super.key});
 
+  _onPressed(String text) {}
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Column(
         children: [
           Display('123.45'),
-          Keyboard(),
+          Keyboard(_onPressed),
         ],
       ),
     );
