@@ -10,25 +10,28 @@ class Button extends StatelessWidget {
   static const OPERATION = Color.fromRGBO(250, 158, 13, 1);
 
   const Button({
+    Key? key,
     required this.text,
     this.big = false,
     this.color = DEFAULT,
     required this.callback,
-  });
+  }) : super(key: key);
 
   const Button.big({
+    Key? key,
     required this.text,
     this.big = true,
     this.color = DEFAULT,
     required this.callback,
-  });
+  }) : super(key: key);
 
   const Button.operation({
+    Key? key,
     required this.text,
     this.big = false,
     this.color = OPERATION,
     required this.callback,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +39,12 @@ class Button extends StatelessWidget {
       flex: big ? 2 : 1,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(this.color),
+          backgroundColor: MaterialStateProperty.all(color),
         ),
-        onPressed: () => callback,
+        onPressed: () => callback(text),
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 32,
             fontWeight: FontWeight.w200,
