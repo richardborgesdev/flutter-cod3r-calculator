@@ -10,7 +10,7 @@ class Memory {
     '+',
     '=',
   ];
-  String operation = '';
+  String _operation = '';
   bool _wipeValue = false;
 
   String get value => _value;
@@ -26,12 +26,29 @@ class Memory {
   }
 
   void _allClear() {
+    _bufferIndex = 0;
+    _buffer.setAll(0, [0, 0]);
     _value = '0';
+    _operation = '';
+    _wipeValue = false;
   }
 
   _setOperation(String newOperation) {
+    if (_bufferIndex == 0) {
+      _operation = newOperation;
+      _bufferIndex = 1;
+    } else {
+      _buffer[0] = _calculate();
+      _buffer[1] = 0;
+      _value = _buffer[0].toString();
+      _value = _value.endsWith('.0') ? _value.split('.')[0] : _value;
+
+      bool isEqualSign = newOperation == '=';
+      _operation = isEqualSign ? '' : newOperation;
+      _bufferIndex = isEqualSign ? 0 : 1;
+    }
+
     _wipeValue = true;
-    operation = newOperation;
   }
 
   _addDigit(String digit) {
@@ -48,5 +65,23 @@ class Memory {
     _wipeValue = false;
 
     _buffer[_bufferIndex] = double.tryParse(_value) ?? 0;
+    print(_buffer);
+  }
+
+  _calculate() {
+    switch (_operation) {
+      case '%':
+        return _buffer[0] % _buffer[1];
+      case '/':
+        return _buffer[0] / _buffer[1];
+      case 'x':
+        return _buffer[0] * _buffer[1];
+      case '-':
+        return _buffer[0] - _buffer[1];
+      case '+':
+        return _buffer[0] + _buffer[1];
+      default:
+        return _buffer[0];
+    }
   }
 }
