@@ -12,10 +12,17 @@ class Memory {
   ];
   String _operation = '';
   bool _wipeValue = false;
+  String _lastCommand = '';
 
   String get value => _value;
 
   void applyCommand(String command) {
+    if (_isReplacingOperation(command)) {
+      _operation = command;
+
+      return;
+    }
+
     if (command == 'AC') {
       _allClear();
     } else if (operations.contains(command)) {
@@ -23,6 +30,8 @@ class Memory {
     } else {
       _addDigit(command);
     }
+
+    _lastCommand = command;
   }
 
   void _allClear() {
@@ -33,17 +42,26 @@ class Memory {
     _wipeValue = false;
   }
 
+  _isReplacingOperation(String command) {
+    return operations.contains(_lastCommand) &&
+        operations.contains(command) &&
+        _lastCommand != '=' &&
+        command != '=';
+  }
+
   _setOperation(String newOperation) {
-    if (_bufferIndex == 0) {
+    bool isEqualSign = newOperation == '=';
+
+    if (_bufferIndex == 0 && !isEqualSign) {
       _operation = newOperation;
       _bufferIndex = 1;
+      _wipeValue = true;
     } else {
       _buffer[0] = _calculate();
       _buffer[1] = 0;
       _value = _buffer[0].toString();
       _value = _value.endsWith('.0') ? _value.split('.')[0] : _value;
 
-      bool isEqualSign = newOperation == '=';
       _operation = isEqualSign ? '' : newOperation;
       _bufferIndex = isEqualSign ? 0 : 1;
     }
